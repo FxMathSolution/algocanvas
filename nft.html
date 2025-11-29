@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFT Detail | AlgoCanvas</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Detail Page Specific Styles */
+        .detail-container {
+            padding-top: 120px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            min-height: 80vh;
+        }
+
+        .detail-image-wrapper {
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .detail-image-wrapper img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .detail-info h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-family: var(--font-mono);
+        }
+
+        .detail-meta {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            color: var(--text-secondary);
+            font-family: var(--font-mono);
+        }
+
+        .detail-desc {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 3rem;
+            color: #d0d0d0;
+        }
+
+        .attributes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .attribute-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .trait-type {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .trait-value {
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        @media (max-width: 768px) {
+            .detail-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <nav class="navbar">
+        <div class="logo"><a href="index.html" style="color: inherit; text-decoration: none;">AlgoCanvas<span
+                    class="highlight">.xyz</span></a></div>
+        <ul class="nav-links">
+            <li><a href="index.html#gallery">Back to Gallery</a></li>
+        </ul>
+        <a href="#" class="cta-button small">Buy on XRP.cafe</a>
+    </nav>
+
+    <div class="container detail-container">
+        <div class="detail-image-wrapper">
+            <img id="nft-image" src="" alt="NFT Image">
+        </div>
+        <div class="detail-info">
+            <h1 id="nft-title">Loading...</h1>
+            <div class="detail-meta">
+                <span id="nft-id">#---</span>
+                <span id="nft-date">---</span>
+            </div>
+            <div class="detail-desc" id="nft-desc">
+                Loading description...
+            </div>
+
+            <h3>Attributes</h3>
+            <div class="attributes-grid" id="nft-attributes">
+                <!-- Attributes populated by JS -->
+            </div>
+
+            <a href="#" class="cta-button">View on Marketplace</a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="copyright">
+                &copy; 2025 AlgoCanvas. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/nfts.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // Detail page specific logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const nftId = urlParams.get('id');
+
+            if (nftId && typeof nftCollection !== 'undefined') {
+                const nft = nftCollection.find(n => n.id === nftId);
+                if (nft) {
+                    document.getElementById('nft-image').src = nft.image;
+                    document.getElementById('nft-title').textContent = nft.title;
+                    document.getElementById('nft-id').textContent = `#${nft.id.split('-')[1]}`;
+                    document.getElementById('nft-date').textContent = nft.date;
+                    document.getElementById('nft-desc').textContent = nft.description;
+
+                    const attrContainer = document.getElementById('nft-attributes');
+                    nft.attributes.forEach(attr => {
+                        const div = document.createElement('div');
+                        div.className = 'attribute-card';
+                        div.innerHTML = `
+                            <div class="trait-type">${attr.trait_type}</div>
+                            <div class="trait-value">${attr.value}</div>
+                        `;
+                        attrContainer.appendChild(div);
+                    });
+                } else {
+                    document.querySelector('.detail-container').innerHTML = '<h1>NFT Not Found</h1>';
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
